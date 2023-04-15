@@ -1,0 +1,27 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+
+{% block content %}
+   <p align="center"><h1>Все новости и статьи</h1></p>
+   {% if posts %}
+       <h6>Количество новостей и статей: {{posts|length}}</h6>
+       <table align="center">
+           <tr>
+               <td>Название</td>
+               <td>Дата создания</td>
+               <td>Содержание</td>
+           </tr>
+
+           {% for post in posts %}
+           <tr>
+               <td>{{ post.title }}</td>
+               <td>{{ post.dateCreation|date:'d M Y' }}</td>
+               <td>{{ post.text|truncatechars:20 }}</td>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Новостей и статей нет!</h2>
+   {% endif %}
+{% endblock content %}
