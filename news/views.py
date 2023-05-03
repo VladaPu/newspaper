@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import \
     ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -49,6 +50,7 @@ class PostDetail(DetailView):
 
 
 class NewsCreate(CreateView):
+    permission_required = ('news.add_Post'),
     # Указываем нашу разработанную форму
     form_class = PostForm
     # модель товаров
@@ -63,6 +65,7 @@ class NewsCreate(CreateView):
 
 
 class ArticlesCreate(CreateView):
+    permission_required = ('news.add_Post',)
     # Указываем нашу разработанную форму
     form_class = PostForm
     # модель товаров
@@ -77,12 +80,14 @@ class ArticlesCreate(CreateView):
 
 
 class PostUpdate(UpdateView):
+    permission_required = ('news.change_Post',)
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
 
 
 class PostDelete(DeleteView):
+    permission_required = ('news.delete_Post',)
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('post_list')
