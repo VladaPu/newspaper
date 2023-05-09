@@ -4,41 +4,32 @@
 {% load custom_filters %}
 
 {% block content %}
-   <p align="center"><h1>Все новости и статьи</h1></p>
+   {% if is_not_subscriber %}
+            <p class="text-center"><a href="{% url 'subscribe' category.id %}" class = "bt btn-secondary btn-sm">Подписаться</a></p>
+   {% endif %}
 
-{# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
-   <form action="" method="get">
-       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
-       {{ filterset.form.as_p }}
-       {# Добавим кнопку отправки данных формы #}
-       <input type="submit" value="Найти" />
-   </form>
-{# Теперь будем проверять не request.user.is_authenticated, а конкретные права #}
-    {% if perms.news.add_post %}
-    <a href="{% url 'news_create' %}">Добавить новость</a>
-    <a href="{% url 'article_create' %}">Добавить статью</a>
-    {% endif %}
+   <p align="center"><h1>Все новости и статьи  в категории: </h1></p>
+    <p><h1>{{category.name}}</h1></p>
 
-   {% if posts %}
-       <h6>Количество новостей и статей: {{posts|length}}</h6>
+   {% if category_news_list %}
+       <h6>Количество новостей и статей: {{category_news_list|length}}</h6>
        <table align="center">
            <tr>
                <td>Название</td>
                <td>Дата создания</td>
                <td>Содержание</td>
-               <td>Категория</td>
 
                {% if perms.news.change_post or perms.news.delete_post %}
                <td>Действия</td>
                {% endif %}
            </tr>
 
-           {% for post in posts %}
+           {% for post in category_news_list %}
            <tr>
+               <td>{{ post.postCategory }}</td>
                <td>{{ post.title }}</td>
                <td>{{ post.dateCreation|date:'d M Y' }}</td>
                <td>{{ post.text|truncatechars:20 }}</td>
-               <td><a href="{% url 'category_list' pk=category.id %}">{{post.postCategory}}</a></td>
                <td>{% if perms.news.change_post %}
                     <a href="{% url 'post_update' pk=post.id %}">Изменить</a>
                     {% endif %} </td>
